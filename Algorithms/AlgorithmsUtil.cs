@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Algorithms
 {
-    public class Util
+    public class AlgorithmsUtil
     {
         /// <summary>
         /// Creates a random convex polygon. Note the result is probably much smaller than the number of points given.
@@ -17,7 +17,7 @@ namespace Algorithms
         /// <returns></returns>
         public static C2DPolygon RandomConvexPolygon(int generationSizeMin, int generationSizeMax, double boundarySize = 1)
         {
-            var boundRect = new C2DRect(-boundarySize, boundarySize, boundarySize, -boundarySize);
+            var boundRect = new C2DRect(0, boundarySize, boundarySize, 0);
             var randomPol = new C2DPolygon();
             randomPol.CreateRandom(boundRect, generationSizeMin, generationSizeMax);
             var hull = new C2DPolygon();

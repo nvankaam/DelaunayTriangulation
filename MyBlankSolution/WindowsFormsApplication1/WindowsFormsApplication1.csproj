@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>835e54e7-ad49-47a2-a4d0-ce1a75080ba1</ProjectGuid>
+    <ProjectGuid>{BC520A67-9AD9-44A4-BB9C-0B004F0AE0E0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WindowsFormsApplication1</RootNamespace>
@@ -54,6 +54,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -72,6 +75,28 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Algorithms\Algorithms.csproj">
+      <Project>{eef6bf51-538d-408d-87b0-46b057da33a4}</Project>
+      <Name>Algorithms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GeoLib 4.0\GeoLib.csproj">
+      <Project>{263192a1-5b8d-4f2b-96ad-0fba86c9f4f5}</Project>
+      <Name>GeoLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GeoPolygons 4.0\GeoPolygons.csproj">
+      <Project>{a13aa7e0-06c4-4401-9006-c7eb506b3479}</Project>
+      <Name>GeoPolygons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GeoProjections 1.0\GeoProjections 1.0\GeoProjections.csproj">
+      <Project>{aa73fc9a-ef3a-435f-b7ca-4e6c80936d36}</Project>
+      <Name>GeoProjections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GeoView 1.0\GeoView 1.0\GeoView.csproj">
+      <Project>{c1d5140e-431f-4aaf-aca7-8bb2d06b11be}</Project>
+      <Name>GeoView</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

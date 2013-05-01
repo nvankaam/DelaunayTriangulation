@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8A09D542-23E9-450C-A1D8-693131A48179}</ProjectGuid>
+    <ProjectGuid>{C1D5140E-431F-4AAF-ACA7-8BB2D06B11BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GeoView</RootNamespace>
