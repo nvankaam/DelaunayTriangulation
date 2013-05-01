@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Web
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelaunayTriangulation", "DelaunayTriangulation\DelaunayTriangulation.csproj", "{1D7FA451-257D-4B59-980C-479429086DA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelaunayTriangulation.Tests", "DelaunayTriangulation.Tests\DelaunayTriangulation.Tests.csproj", "{93DCE9A7-3FC7-4142-B8DE-E926C7643161}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D7FA451-257D-4B59-980C-479429086DA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7FA451-257D-4B59-980C-479429086DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7FA451-257D-4B59-980C-479429086DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7FA451-257D-4B59-980C-479429086DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DCE9A7-3FC7-4142-B8DE-E926C7643161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DCE9A7-3FC7-4142-B8DE-E926C7643161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DCE9A7-3FC7-4142-B8DE-E926C7643161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DCE9A7-3FC7-4142-B8DE-E926C7643161}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
