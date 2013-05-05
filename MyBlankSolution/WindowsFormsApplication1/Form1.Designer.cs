@@ -34,6 +34,7 @@ namespace WindowsFormsApplication1
         private void InitializeComponent()
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ShiftButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,13 +45,24 @@ namespace WindowsFormsApplication1
             this.pictureBox1.Size = new System.Drawing.Size(500, 500);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new PaintEventHandler(this.pictureBox1_Paint);
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            // 
+            // ShiftButton
+            // 
+            this.ShiftButton.Location = new System.Drawing.Point(12, 22);
+            this.ShiftButton.Name = "ShiftButton";
+            this.ShiftButton.Size = new System.Drawing.Size(75, 23);
+            this.ShiftButton.TabIndex = 1;
+            this.ShiftButton.Text = "Shift";
+            this.ShiftButton.UseVisualStyleBackColor = true;
+            this.ShiftButton.Click += new System.EventHandler(this.ShiftButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1378, 623);
+            this.Controls.Add(this.ShiftButton);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -62,6 +74,7 @@ namespace WindowsFormsApplication1
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
+        private Button ShiftButton;
 
     }
 }

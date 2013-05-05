@@ -122,12 +122,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DelaunayTriangulation\DelaunayTriangulation.csproj">
-      <Project>{1D7FA451-257D-4B59-980C-479429086DA1}</Project>
-      <Name>DelaunayTriangulation</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

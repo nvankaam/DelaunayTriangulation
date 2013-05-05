@@ -31,6 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GeoLib">
+      <HintPath>..\GeoLib 4.0\bin\Debug\GeoLib.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoPolygons">
+      <HintPath>..\GeoPolygons 4.0\bin\Debug\GeoPolygons.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoProjections">
+      <HintPath>..\GeoProjections 1.0\GeoProjections 1.0\bin\Debug\GeoProjections.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoView">
+      <HintPath>..\GeoView 1.0\GeoView 1.0\bin\Debug\GeoView.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,29 +54,12 @@
   <ItemGroup>
     <Compile Include="ChewPoint.cs" />
     <Compile Include="Chews.cs" />
+    <Compile Include="MySortedList.cs" />
     <Compile Include="GaSPoint.cs" />
     <Compile Include="GaSPointEdgeSet.cs" />
     <Compile Include="GuibasAndStolfi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AlgorithmsUtil.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GeoLib 4.0\GeoLib.csproj">
-      <Project>{263192a1-5b8d-4f2b-96ad-0fba86c9f4f5}</Project>
-      <Name>GeoLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeoPolygons 4.0\GeoPolygons.csproj">
-      <Project>{a13aa7e0-06c4-4401-9006-c7eb506b3479}</Project>
-      <Name>GeoPolygons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeoProjections 1.0\GeoProjections 1.0\GeoProjections.csproj">
-      <Project>{aa73fc9a-ef3a-435f-b7ca-4e6c80936d36}</Project>
-      <Name>GeoProjections</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GeoView 1.0\GeoView 1.0\GeoView.csproj">
-      <Project>{c1d5140e-431f-4aaf-aca7-8bb2d06b11be}</Project>
-      <Name>GeoView</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

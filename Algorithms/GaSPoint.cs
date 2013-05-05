@@ -9,31 +9,31 @@ namespace Algorithms
     public class GaSPoint : C2DPoint, IComparable
     {
 
+        public List<C2DPoint> points;
+
         public GaSPoint(C2DPoint Other) : base(Other) 
         {
-            edges = new List<C2DLine>();
+            points = new List<C2DPoint>();
         }
 
         public GaSPoint(int x, int y) : base(x, y) 
         {
-            edges = new List<C2DLine>();
+            points = new List<C2DPoint>();
         }
 
-        protected List<C2DLine> edges;
-
-        public void AddEdge(C2DLine edge)
+        public void AddPoint(C2DPoint point)
         {
-            edges.Add(edge);
+            points.Add(point);
         }
 
-        public bool RemoveEdge(C2DLine edge)
+        public bool RemovePoint(C2DPoint point)
         {
-            return edges.Remove(edge);
+            return points.Remove(point);
         }
 
         public void RemoveEdge(int i)
         {
-            edges.RemoveAt(i);
+            points.RemoveAt(i);
         }
 
         public override bool Equals(Object obj)
@@ -49,6 +49,42 @@ namespace Algorithms
                 return true;
             }
             return false;
+        }
+
+        public List<C2DPoint> GetSortedList(bool reverse)
+        {
+            PointLeftToRightBottomUp comparer = new PointLeftToRightBottomUp();
+            points.Sort(comparer);
+            if (reverse)
+                points.Reverse();
+            return points;
+        }
+
+        public int CompareTo(object obj)
+        {
+            GaSPoint p = obj as GaSPoint;
+            if ((object)p == null)
+            {
+                throw new InvalidCastException();
+            }
+            if (this.x == p.x)
+                if (this.y > p.y)
+                    return 1;
+                else if (this.y < p.y)
+                    return -1;
+                else
+                    return 0;
+            if (this.x > p.x)
+                return 1;
+            else if (this.x < p.x)
+                return -1;
+            else
+                return 0;
+        }
+
+        public override string ToString()
+        {
+            return "(" + x + "," + y + ")";
         }
     }
 }

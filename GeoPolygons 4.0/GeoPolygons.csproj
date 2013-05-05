@@ -39,7 +39,7 @@
   <ItemGroup>
     <Reference Include="GeoLib, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>References\GeoLib.dll</HintPath>
+      <HintPath>..\GeoLib 4.0\bin\Debug\GeoLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
