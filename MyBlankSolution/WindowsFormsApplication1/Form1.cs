@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace WindowsFormsApplication1
     public partial class Form1 : Form
     {
         private int maxSize = 500;
+        private int n = 10;
         GaSPointEdgeSet result;
         List<C2DPoint> points;
 
@@ -21,7 +23,7 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
             result = new GaSPointEdgeSet();
-            testGuibasAndStolfi(10);
+            testGuibasAndStolfi(n);
         }
 
         private void testGuibasAndStolfi(int n)
@@ -34,6 +36,10 @@ namespace WindowsFormsApplication1
             }
             GuibasAndStolfi GaS =  new GuibasAndStolfi(points);
             result = GaS.Run();
+            foreach (GaSPoint p in result.pointList)
+            {
+                Debug.WriteLine(p + " " + p.points.Count);
+            }
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)

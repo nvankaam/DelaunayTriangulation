@@ -1,6 +1,7 @@
 ﻿using GeoLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,18 +9,18 @@ namespace Algorithms
 {
     public class GaSPointEdgeSet
     {
-        public MySortedList<GaSPoint> pointList { get; set; }
+        public List<GaSPoint> pointList { get; set; }
         public List<C2DLine> edgeList { get; set; }
 
         public GaSPointEdgeSet()
         {
-            pointList = new MySortedList<GaSPoint>();
+            pointList = new List<GaSPoint>();
             edgeList = new List<C2DLine>();
         }
 
         public GaSPointEdgeSet(List<C2DPoint> points)
         {
-            pointList = new MySortedList<GaSPoint>();
+            pointList = new List<GaSPoint>();
             edgeList = new List<C2DLine>();
             for (int i = 0; i < points.Count; i++)
             {
@@ -39,7 +40,7 @@ namespace Algorithms
         {
             pointList = g1.pointList;
             edgeList = g1.edgeList;
-            pointList = pointList.Concat(g2.pointList, false);
+            pointList = pointList.Concat(g2.pointList).ToList();
             edgeList = edgeList.Concat(g2.edgeList).ToList();
         }
 
@@ -75,7 +76,7 @@ namespace Algorithms
             int i = pointList.IndexOf(new GaSPoint(p));
             if (i == -1)
                 return null;
-            return new GaSPoint(pointList[i]);
+            return pointList[i];
         }
 
         public List<GaSPoint> GetBottomList()
@@ -83,7 +84,7 @@ namespace Algorithms
             List<GaSPoint> low = new List<GaSPoint>(pointList);
             low.Sort(new PointBottumUp());
             return low;
-        }
+        }        
 
         /// <summary>
         /// Sort helper.
@@ -104,6 +105,66 @@ namespace Algorithms
                     return 0;
             }
             #endregion
+        }
+
+        internal bool Remove(C2DPoint from, C2DPoint to)
+        {
+            bool success = false;
+            // Remove edges
+            for (int i = 0; i < edgeList.Count; i++)
+            {
+                C2DLine l = edgeList[i];
+                if (l.GetPointFrom().x == from.x && l.GetPointFrom().y == from.y && l.GetPointTo().x == to.x && l.GetPointTo().y == to.y ||
+                    l.GetPointFrom().x == to.x && l.GetPointFrom().y == to.y && l.GetPointTo().x == from.x && l.GetPointTo().y == from.y)
+                {
+                    edgeList.RemoveAt(i);
+                    i--;
+                    success = true;
+                }
+            }            
+            
+            // Remove points
+            int toi = pointList.IndexOf(new GaSPoint(to));
+            int fromi = pointList.IndexOf(new GaSPoint(from));
+            if (toi == -1)
+            {
+                Debug.WriteLine("Something is wrong here" + to);
+            }
+            else
+            {
+                success = success && pointList[toi].RemovePoint(new GaSPoint(from)); // Do we need to check if this node has any edges left?
+            }
+            if (fromi == -1)
+            {
+                Debug.WriteLine("Something is wrong here" + from);
+            }
+            else
+            {
+                success = success && pointList[fromi].RemovePoint(new GaSPoint(to)); // Do we need to check if this node has any edges left?
+            }
+
+            return success;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("Points = {");
+            foreach (GaSPoint p in pointList)
+            {
+                sb.Append(p + ", ");
+            }
+            if (pointList.Count != 0)
+                sb.Remove(sb.Length - 2, 2);
+
+            sb.Append("}\r\nEdges = {");
+            foreach (C2DLine l in edgeList)
+            {
+                sb.Append("["+ l.GetPointFrom() + ", " + l.GetPointTo()+"] ");
+            }
+
+            return sb.ToString();
         }
     }
 }

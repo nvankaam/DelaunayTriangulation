@@ -86,5 +86,12 @@ namespace Algorithms
         {
             return "(" + x + "," + y + ")";
         }
+
+        public List<C2DPoint> GetSortedAngleList(C2DPoint a, C2DPoint b, bool left)
+        {
+            List<C2DPoint> low = new List<C2DPoint>(points);
+            low.Sort(new IncreasingCWAngle(a, b, left));
+            return low;
+        }
     }
 }

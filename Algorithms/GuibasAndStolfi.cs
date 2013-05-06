@@ -61,69 +61,88 @@ namespace Algorithms
             bool crossesLeft;
             bool crossesRight;
 
-            do
+            for (int i = 1; i < leftBottomList.Count; i++)
             {
                 C2DLine test = new C2DLine(leftBottom, rightBottom);
-                crossesLeft = false;
-                foreach (C2DLine l in leftEdgeSet.edgeList)
+                if (test.IsOnRight(leftBottomList[i]))
                 {
-                    if (l.Crosses(test, new List<C2DPoint>()))
-                        crossesLeft = true;
+                    leftBottom = leftBottomList[i];
                 }
-                crossesRight = false;
-                foreach (C2DLine l in rightEdgeSet.edgeList)
+            }
+
+            for (int i = 1; i < rightBottomList.Count; i++)
+            {
+                C2DLine test = new C2DLine(leftBottom, rightBottom);
+                if (test.IsOnRight(rightBottomList[i]))
                 {
-                    if (l.Crosses(test, new List<C2DPoint>()))
-                        crossesRight = true;
+                    rightBottom = rightBottomList[i];
                 }
-                if (crossesLeft)
+            }
+
+                do
                 {
-                    leftBottom = leftBottomList[li]; li++;
-                }
-                if (crossesRight)
-                {
-                    rightBottom = rightBottomList[ri]; ri++;
-                }
-            } while (crossesLeft || crossesRight);
+                    C2DLine test = new C2DLine(leftBottom, rightBottom);
+                    crossesLeft = false;
+                    foreach (C2DLine l in leftEdgeSet.edgeList)
+                    {
+                        if (test.Crosses(l))
+                            crossesLeft = true;
+                    }
+                    crossesRight = false;
+                    foreach (C2DLine l in rightEdgeSet.edgeList)
+                    {
+                        if (test.Crosses(l))
+                            crossesRight = true;
+                    }
+                    if (crossesLeft)
+                    {
+                        leftBottom = leftBottomList[li]; li++;
+                    }
+                    if (crossesRight)
+                    {
+                        rightBottom = rightBottomList[ri]; ri++;
+                    }
+                } while (crossesLeft || crossesRight);
             
             // Merge the two sets
             GaSPointEdgeSet mergedEdges = new GaSPointEdgeSet(leftEdgeSet, rightEdgeSet);
 
+            
             while (true)
             {
-                Debug.WriteLine("GaSRecurLoop: " + leftBottom +"  "+rightBottom);
+                Debug.WriteLine("Bottoms: " + leftBottom +" , "+rightBottom);
                 C2DLine baseEdge = new C2DLine(leftBottom, rightBottom);
 
-                C2DPoint leftOption = PotentialPoint(leftBottom.GetSortedList(true), leftBottom, rightBottom, true);
-                C2DPoint rightOption = PotentialPoint(rightBottom.GetSortedList(false), rightBottom, leftBottom, false);
+                List<C2DPoint> leftSortedAngleList = leftBottom.GetSortedAngleList(leftBottom, rightBottom, true);
+                List<C2DPoint> rightSortedAngleList = rightBottom.GetSortedAngleList(leftBottom, rightBottom, false);
 
-                mergedEdges.AddEdge(baseEdge); // Add after the potential points are found, because otherwise these are added as well
+                C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges);
+                C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges);
+
+                Debug.WriteLine("Options: " + leftOption + " , " + rightOption + ", Counts: " + leftSortedAngleList.Count + ", " + rightSortedAngleList.Count);
+
+                // Add after the potential points are found, because otherwise these are added as well
+                leftBottom.AddPoint(rightBottom);
+                rightBottom.AddPoint(leftBottom);
+                mergedEdges.AddEdge(baseEdge); 
 
                 if (leftOption != null && rightOption == null)
                 {
-                    Debug.WriteLine("1" + leftOption);
                     leftBottom = leftEdgeSet.Get(leftOption); // Only the left option is viable
-                    Debug.WriteLine("1"+leftBottom);
                 }
                 else if (leftOption == null && rightOption != null)
                 {
-                    Debug.WriteLine("2" + rightOption);
                     rightBottom = rightEdgeSet.Get(rightOption); // Only the right option is viable
-                    Debug.WriteLine("2" + rightBottom);
                 }
                 else if (leftOption != null && rightOption != null)
                 {
                     if (WithinCircumCircle(leftBottom, rightBottom, leftOption, rightOption))
                     {
-                        Debug.WriteLine("3" + rightOption);
                         rightBottom = rightEdgeSet.Get(rightOption); // Only the right option is viable
-                        Debug.WriteLine("3" + rightBottom);
                     }
                     else
                     {
-                        Debug.WriteLine("4" + leftOption);
                         leftBottom = leftEdgeSet.Get(leftOption); // Only the left option is viable
-                        Debug.WriteLine("4" + leftBottom);
                     }
                 }
                 else
@@ -134,30 +153,34 @@ namespace Algorithms
             return mergedEdges;
         }
 
-        private C2DPoint PotentialPoint(List<C2DPoint> sortedList, C2DPoint start, C2DPoint other, bool left)
+        private C2DPoint PotentialPoint(List<C2DPoint> sortedList, C2DPoint start, C2DPoint other, bool left, ref GaSPointEdgeSet edgeSet)
         {
             for (int i = 0; i < sortedList.Count; i++)
             {
-                if (sortedList[i].Equals(other))
-                    continue;
                 double angle;
                 if (left)
                     angle = Angle(start, sortedList[i], other);
                 else
                     angle = Angle(start, other, sortedList[i]);
-                Debug.WriteLine("GaSRecurLoopPotential: " + i + " " + start + " " + sortedList[i] + " " + other + " " + angle);
                 if (angle > Math.PI || angle == 0.0)
                     continue; // The angle may not be larger than 180 degrees clockwise for the point to be a valid option
                 // Determine if the next point lies within the circumcircle
                 if (i == sortedList.Count - 1) // No next point
                 {
-                    return sortedList[i];
+                    return sortedList[i]; // Potential point
                 }
                 else
                 {
                     if (!WithinCircumCircle(sortedList[i], start, other, sortedList[i + 1]))
                     {
-                        return sortedList[i];
+                        return sortedList[i]; // Potential point
+                    }
+                    else
+                    {
+                        Debug.WriteLine("EdgeSet "+ edgeSet);
+                        // Remove this edge, since it is no longer wanted
+                        bool success = edgeSet.Remove(start, sortedList[i]);
+                        Debug.WriteLine(success +" "+ edgeSet);
                     }
                 }
             }

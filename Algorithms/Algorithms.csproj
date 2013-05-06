@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ChewPoint.cs" />
     <Compile Include="Chews.cs" />
+    <Compile Include="IncreasingCWAngle.cs" />
     <Compile Include="MySortedList.cs" />
     <Compile Include="GaSPoint.cs" />
     <Compile Include="GaSPointEdgeSet.cs" />
