@@ -16,6 +16,13 @@ namespace Algorithms
             points = new List<C2DPoint>();
         }
 
+        public GaSPoint(GaSPoint g)
+        {
+            x = g.x;
+            y = g.y;
+            points = new List<C2DPoint>(g.points);
+        }
+
         public GaSPoint(int x, int y) : base(x, y) 
         {
             points = new List<C2DPoint>();

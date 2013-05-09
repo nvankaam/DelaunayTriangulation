@@ -84,7 +84,25 @@ namespace Algorithms
             List<GaSPoint> low = new List<GaSPoint>(pointList);
             low.Sort(new PointBottumUp());
             return low;
-        }        
+        }
+
+        public List<GaSPoint> GetList()
+        {
+            return new List<GaSPoint>(pointList);
+        }
+
+        public GaSPoint GetLowestPoint()
+        {
+            GaSPoint x = pointList[0];
+            for (int i = 1; i < pointList.Count; i++)
+            {
+                if (pointList[i].y < x.y)
+                {
+                    x = pointList[i];
+                }
+            }
+            return new GaSPoint(x);
+        }
 
         /// <summary>
         /// Sort helper.

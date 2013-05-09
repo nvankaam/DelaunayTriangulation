@@ -39,8 +39,6 @@ namespace Algorithms
 
         private GaSPointEdgeSet GaSRecur(List<C2DPoint> points)
         {
-            Debug.WriteLine("GaSRecur: "+points.Count);
-
             // If the number of points in the list is smaller or equal to three, return the edges between them. Edges are added such that the first point is the leftmost
             if (points.Count <= 3)
             {
@@ -52,16 +50,12 @@ namespace Algorithms
             GaSPointEdgeSet rightEdgeSet = GaSRecur(new List<C2DPoint>(points.Skip(points.Count / 2)));
 
             // Create the first base edge
-            List<GaSPoint> leftBottomList = leftEdgeSet.GetBottomList();
-            List<GaSPoint> rightBottomList = rightEdgeSet.GetBottomList();
-            GaSPoint leftBottom = leftBottomList[0];
-            GaSPoint rightBottom = rightBottomList[0];
-            int li = 1;
-            int ri = 1;
-            bool crossesLeft;
-            bool crossesRight;
+            List<GaSPoint> leftBottomList = leftEdgeSet.GetList();
+            List<GaSPoint> rightBottomList = rightEdgeSet.GetList();
+            GaSPoint leftBottom = leftEdgeSet.GetLowestPoint();
+            GaSPoint rightBottom = rightEdgeSet.GetLowestPoint();
 
-            for (int i = 1; i < leftBottomList.Count; i++)
+            for (int i = 0; i < leftBottomList.Count; i++)
             {
                 C2DLine test = new C2DLine(leftBottom, rightBottom);
                 if (test.IsOnRight(leftBottomList[i]))
@@ -70,7 +64,7 @@ namespace Algorithms
                 }
             }
 
-            for (int i = 1; i < rightBottomList.Count; i++)
+            for (int i = 0; i < rightBottomList.Count; i++)
             {
                 C2DLine test = new C2DLine(leftBottom, rightBottom);
                 if (test.IsOnRight(rightBottomList[i]))
@@ -79,7 +73,13 @@ namespace Algorithms
                 }
             }
 
-                do
+            /* // Dit lijkt nergens nodig voor te zijn.. In principe logisch.
+            
+            int li = 1;
+            int ri = 1;
+            bool crossesLeft;
+            bool crossesRight;
+               do
                 {
                     C2DLine test = new C2DLine(leftBottom, rightBottom);
                     crossesLeft = false;
@@ -103,14 +103,14 @@ namespace Algorithms
                         rightBottom = rightBottomList[ri]; ri++;
                     }
                 } while (crossesLeft || crossesRight);
-            
+            */
+
             // Merge the two sets
             GaSPointEdgeSet mergedEdges = new GaSPointEdgeSet(leftEdgeSet, rightEdgeSet);
 
             
             while (true)
             {
-                Debug.WriteLine("Bottoms: " + leftBottom +" , "+rightBottom);
                 C2DLine baseEdge = new C2DLine(leftBottom, rightBottom);
 
                 List<C2DPoint> leftSortedAngleList = leftBottom.GetSortedAngleList(leftBottom, rightBottom, true);
@@ -118,8 +118,6 @@ namespace Algorithms
 
                 C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges);
                 C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges);
-
-                Debug.WriteLine("Options: " + leftOption + " , " + rightOption + ", Counts: " + leftSortedAngleList.Count + ", " + rightSortedAngleList.Count);
 
                 // Add after the potential points are found, because otherwise these are added as well
                 leftBottom.AddPoint(rightBottom);
@@ -163,7 +161,7 @@ namespace Algorithms
                 else
                     angle = Angle(start, other, sortedList[i]);
                 if (angle > Math.PI || angle == 0.0)
-                    continue; // The angle may not be larger than 180 degrees clockwise for the point to be a valid option
+                    return null; // The angle may not be larger than 180 degrees clockwise for the point to be a valid option
                 // Determine if the next point lies within the circumcircle
                 if (i == sortedList.Count - 1) // No next point
                 {
@@ -177,10 +175,8 @@ namespace Algorithms
                     }
                     else
                     {
-                        Debug.WriteLine("EdgeSet "+ edgeSet);
                         // Remove this edge, since it is no longer wanted
                         bool success = edgeSet.Remove(start, sortedList[i]);
-                        Debug.WriteLine(success +" "+ edgeSet);
                     }
                 }
             }

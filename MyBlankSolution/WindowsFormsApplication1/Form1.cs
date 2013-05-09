@@ -36,10 +36,6 @@ namespace WindowsFormsApplication1
             }
             GuibasAndStolfi GaS =  new GuibasAndStolfi(points);
             result = GaS.Run();
-            foreach (GaSPoint p in result.pointList)
-            {
-                Debug.WriteLine(p + " " + p.points.Count);
-            }
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
