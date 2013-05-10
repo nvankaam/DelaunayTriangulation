@@ -37,6 +37,12 @@
     <DocumentationFile>bin\Release\GeoProjections.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GeoLib">
+      <HintPath>..\..\GeoLib 4.0\bin\Debug\GeoLib.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoPolygons">
+      <HintPath>..\..\GeoPolygons 4.0\bin\Debug\GeoPolygons.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />

@@ -418,5 +418,13 @@ namespace GeoLib
         /// </summary>
         public double y;
 
+        /// <summary>
+        /// (x,y)
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "(" + x + "," + y + ")";
+        }
     }
 }

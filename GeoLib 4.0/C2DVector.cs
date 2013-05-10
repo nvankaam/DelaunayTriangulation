@@ -215,7 +215,7 @@ namespace GeoLib
         /// </summary>
 	    public double Cross(C2DVector Other)
         {
-            return i * Other.i - j * Other.j;
+            return i * Other.j - j * Other.i;
         }
 
         /// <summary>
