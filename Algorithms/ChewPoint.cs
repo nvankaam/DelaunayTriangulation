@@ -8,7 +8,7 @@ namespace Algorithms
 {
     public class ChewPoint : C2DPoint
     {
-        public IList<C2DTriangle> triangles { get; set; }
+        public List<C2DTriangle> triangles { get; set; }
 
         public ChewPoint()
         {

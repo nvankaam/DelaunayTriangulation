@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Algorithms
 {
     public class Chews
@@ -38,12 +39,17 @@ namespace Algorithms
                     return result;
                 }
             );
-
             ChewRecur(chewPoints);
 
         }
 
-        public IList<C2DTriangle> ChewRecur(IList<ChewPoint> points)
+        /// <summary>
+        /// The recursive method for chew's algorithm
+        /// List is chosen above IList because we need foreach, and we only use default Lists anyway
+        /// </summary>
+        /// <param name="points">The points in the diagram.</param>
+        /// <returns></returns>
+        public List<C2DTriangle> ChewRecur(List<ChewPoint> points)
         {
             if (points.Count <= 3)
             {
@@ -54,6 +60,7 @@ namespace Algorithms
                 return singleTriangle;
             }
 
+            //Pick a random point (Step 1)
             int randIndex = RandomGenerator.Next(0, points.Count);
             Debug.WriteLine("Random nr: " + randIndex);
 
@@ -61,28 +68,93 @@ namespace Algorithms
             var nodeQ = points[(randIndex + points.Count - 1) % points.Count];
             var nodeR = points[(randIndex + 1) % points.Count];
 
-            
-
             points.RemoveAt(randIndex);
-            var triangles = ChewRecur(points);
+            List<C2DTriangle> triangles = ChewRecur(points);
             var pqrTriangle = new C2DTriangle(nodeP, nodeQ, nodeR);
+
             //Store reference to the triangle on the points, for later use
+            //TODO: Fix this on a better way
             nodeP.triangles.Add(pqrTriangle);
             nodeQ.triangles.Add(pqrTriangle);
             nodeR.triangles.Add(pqrTriangle);
 
+            //All triangles whose circumcircle contains P.
+            //TODO: Optimize this so it is in O(n)
+            //TODO: Don't check the pqr triangle because we already know its within the range of P.
             var filtered = triangles.Where(o => {
                     var center = o.GetCircumCentre();
                     return center.Distance(nodeP) <= center.Distance(o.p1);
                 }
             );
+            //Remove the filtered list from the list
+            filtered.ToList().ForEach(o => triangles.Remove(o));
 
+            //Obtain all points
+            var filteredPoints = points.Where(o =>
+            {
+                foreach (var t in o.triangles)
+                {
+                    if (triangles.Contains(t))
+                        return true;
+                }
+                return false;
+            });
 
-
+            //Add the retriangulated version back to the list
+            triangles.AddRange(ReTriangulate(filtered, filteredPoints, nodeP));
 
             return triangles;
         }
+
+        /// <summary>
+        /// Retriangulates the set of points with P as endpoint. 
+        /// Note this only works for convex polygon points and assumes the points are sorted in the same order as they appear in the polygon!
+        /// </summary>
+        /// <param name="S"></param>
+        /// <param name="selectedPoints"></param>
+        /// <param name="P"></param>
+        /// <returns></returns>
+        private IEnumerable<C2DTriangle> ReTriangulate(IEnumerable<C2DTriangle> S, IEnumerable<ChewPoint> selectedPoints, ChewPoint P)
+        {
+            Debug.WriteLine("Size of retriangulate set: " + S.Count()); //Debugging if its actually O(1)
+            var result = new List<C2DTriangle>();
+
+            //Remove all references to the current triangles
+            foreach (var p in selectedPoints)
+            {
+                p.triangles.RemoveAll(o => S.Contains(o));
+            }
+
+            var pointStack = new Stack<ChewPoint>(selectedPoints);
+            while (true)
+            {
+                var node1 = pointStack.Pop();
+                if (node1 == null)
+                    return result;
+                if (node1 == P)
+                    node1 = pointStack.Pop();
+                var node2 = pointStack.Pop();
+                if (node2 == P)
+                    node2 = pointStack.Pop();
+                if (node2 == null)
+                    throw new InvalidOperationException("Invalid set of points for retriangulation");
+                var triangle = new C2DTriangle(node1, node2, P);
+                node1.triangles.Add(triangle);
+                node2.triangles.Add(triangle);
+                P.triangles.Add(triangle);
+                result.Add(triangle);
+            }
+        }
+
     }
+
+    public class TriangleConstruction {
+        public ChewPoint node1 {get; set;}
+        public ChewPoint node2 { get; set; }
+        public ChewPoint node3 { get; set; }
+    }
+
+   
 
    
 }
