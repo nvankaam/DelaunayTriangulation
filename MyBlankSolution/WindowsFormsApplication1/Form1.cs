@@ -19,11 +19,30 @@ namespace WindowsFormsApplication1
         GaSPointEdgeSet result;
         List<C2DPoint> points;
 
+        List<C2DTriangle> ChewsTriangles;
+
         public Form1()
         {
             InitializeComponent();
             result = new GaSPointEdgeSet();
             testGuibasAndStolfi(n);
+            testChews(n);
+        }
+
+        private void testChews(int n)
+        {
+            var triangles = Chews.TestRun(n);
+            ChewsTriangles = triangles;
+        }
+
+        private void pictureBox2_Paint(object sender, PaintEventArgs e)
+        {
+            var blackPen = new Pen(Color.Black, 2);
+            var geoDraw = new CGeoDraw();
+            foreach (var t in ChewsTriangles)
+            {
+                geoDraw.Draw(t, e.Graphics, blackPen);
+            }
         }
 
         private void testGuibasAndStolfi(int n)
@@ -65,7 +84,14 @@ namespace WindowsFormsApplication1
                 l.SetPointFrom(new C2DPoint(l.GetPointFrom().x, maxSize - l.GetPointFrom().y));
                 l.SetPointTo(new C2DPoint(l.GetPointTo().x, maxSize - l.GetPointTo().y));
             }
+            testChews(n);
             pictureBox1.Refresh();
+            pictureBox2.Refresh();
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio Express 2012 for Web
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelaunayTriangulation.Tests", "DelaunayTriangulation.Tests\DelaunayTriangulation.Tests.csproj", "{93DCE9A7-3FC7-4142-B8DE-E926C7643161}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms", "Algorithms\Algorithms.csproj", "{EEF6BF51-538D-408D-87B0-46B057DA33A4}"
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoView", "GeoView 1.0\GeoView 1.0\GeoView.csproj", "{C1D5140E-431F-4AAF-ACA7-8BB2D06B11BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "MyBlankSolution\WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{BC520A67-9AD9-44A4-BB9C-0B004F0AE0E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualizationForm", "MyBlankSolution\WindowsFormsApplication1\VisualizationForm.csproj", "{40EE4E2C-E186-418B-84A1-9C47F02A5947}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,21 @@ Global
 		{BC520A67-9AD9-44A4-BB9C-0B004F0AE0E0}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BC520A67-9AD9-44A4-BB9C-0B004F0AE0E0}.Release|x86.ActiveCfg = Release|x86
 		{BC520A67-9AD9-44A4-BB9C-0B004F0AE0E0}.Release|x86.Build.0 = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Debug|x86.ActiveCfg = Debug|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Debug|x86.Build.0 = Debug|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Evaluation|Any CPU.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Evaluation|Mixed Platforms.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Evaluation|Mixed Platforms.Build.0 = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Evaluation|x86.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Evaluation|x86.Build.0 = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Release|Any CPU.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Release|Mixed Platforms.Build.0 = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Release|x86.ActiveCfg = Release|x86
+		{40EE4E2C-E186-418B-84A1-9C47F02A5947}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

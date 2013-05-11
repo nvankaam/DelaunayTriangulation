@@ -35,7 +35,9 @@ namespace WindowsFormsApplication1
         {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ShiftButton = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -46,6 +48,14 @@ namespace WindowsFormsApplication1
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+
+            this.pictureBox2.Location = new System.Drawing.Point(700, 100);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(500, 500);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox2_Paint);
+
             // 
             // ShiftButton
             // 
@@ -56,17 +66,20 @@ namespace WindowsFormsApplication1
             this.ShiftButton.Text = "Shift";
             this.ShiftButton.UseVisualStyleBackColor = true;
             this.ShiftButton.Click += new System.EventHandler(this.ShiftButton_Click);
+
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1378, 623);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.ShiftButton);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -74,6 +87,7 @@ namespace WindowsFormsApplication1
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
         private Button ShiftButton;
 
     }

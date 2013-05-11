@@ -15,7 +15,7 @@ namespace Algorithms
         /// <param name="generationSizeMax"></param>
         /// <param name="boundarySize"></param>
         /// <returns></returns>
-        public static C2DPolygon RandomConvexPolygon(int generationSizeMin, int generationSizeMax, double boundarySize = 1)
+        public static C2DPolygon RandomConvexPolygon(int generationSizeMin, int generationSizeMax, double boundarySize = 500)
         {
             var boundRect = new C2DRect(0, boundarySize, boundarySize, 0);
             var randomPol = new C2DPolygon();

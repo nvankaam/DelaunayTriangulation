@@ -42,7 +42,7 @@
       <HintPath>..\..\GeoLib 4.0\bin\Debug\GeoLib.dll</HintPath>
     </Reference>
     <Reference Include="GeoPolygons">
-      <HintPath>..\..\GeoPolygons 4.0\bin\Debug\GeoPolygons.dll</HintPath>
+      <HintPath>..\..\GeoPolygons 4.0\obj\Debug\GeoPolygons.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
