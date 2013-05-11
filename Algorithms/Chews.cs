@@ -170,8 +170,8 @@ namespace Algorithms
             }
             //Remove doubles
             filteredPoints = filteredPoints.Distinct().ToList();
-            //Dont use P in retriangulation
-            filteredPoints.Remove(nodeP);
+
+            filteredPoints.Sort();
 
             //Obtain all points
             
@@ -205,49 +205,25 @@ namespace Algorithms
             Debug.WriteLine("Size of retriangulate set: " + S.Count()); //Debugging if its actually O(1)
             var result = new List<ChewTriangle>();
 
-            //Remove all references to the current triangles
-            foreach (var p in selectedPoints)
+            for (var index = 0; index < selectedPoints.Count; index++)
             {
-                GetTriangles(p).RemoveAll(o => ListContains(o, S));
+                var P1 = selectedPoints[index];
+                var P2 = selectedPoints[(index+1)%selectedPoints.Count];
+                if(P1 != P && P2 != P) {
+                    var triangle = new ChewTriangle()
+                    {
+                        P1 = P1,
+                        P2 = P2,
+                        P3 = P,
+                        Triangle = new C2DTriangle(ConvexPoints[P1], ConvexPoints[P2], ConvexPoints[P])
+                    };
+
+                    AddTriangle(P1, triangle);
+                    AddTriangle(P2, triangle);
+                    AddTriangle(P, triangle);
+                    result.Add(triangle);
+                }
             }
-
-            var pointStack = new Stack<int>(selectedPoints);
-
-            var node1 = pointStack.Pop();
-            var firstNode = node1;
-            var node2 = node1;
-
-            while (pointStack.Count > 0)
-            {
-                node2 = node1;
-                node1 = pointStack.Pop();
-               
-                var triangle = new ChewTriangle() {
-                    P1 = node1,
-                    P2 = node2,
-                    P3 = P,
-                    Triangle = new C2DTriangle(ConvexPoints[node1], ConvexPoints[node2], ConvexPoints[P])
-                };
-                 
-                AddTriangle(node1, triangle);
-                AddTriangle(node2, triangle);
-                AddTriangle(P, triangle);
-                result.Add(triangle);
-            }
-            
-            //Add last triangle
-            var lastTriangle = new ChewTriangle() {
-                    P1 = node1,
-                    P2 = firstNode,
-                    P3 = P,
-                    Triangle = new C2DTriangle(ConvexPoints[node1], ConvexPoints[firstNode], ConvexPoints[P])
-            };
-            AddTriangle(node2, lastTriangle);
-            AddTriangle(firstNode, lastTriangle);
-            AddTriangle(P, lastTriangle);
-            result.Add(lastTriangle);
-
-
             return result;
         }
 
