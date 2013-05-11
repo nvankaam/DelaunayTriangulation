@@ -19,7 +19,7 @@ namespace WindowsFormsApplication1
         GaSPointEdgeSet result;
         List<C2DPoint> points;
 
-        List<C2DTriangle> ChewsTriangles;
+        List<ChewTriangle> ChewsTriangles;
 
         public Form1()
         {
@@ -41,7 +41,7 @@ namespace WindowsFormsApplication1
             var geoDraw = new CGeoDraw();
             foreach (var t in ChewsTriangles)
             {
-                geoDraw.Draw(t, e.Graphics, blackPen);
+                geoDraw.Draw(t.Triangle, e.Graphics, blackPen);
             }
         }
 

@@ -12,42 +12,48 @@ namespace Algorithms
 {
     public class Chews
     {
+        /// <summary>
+        /// List of all points on the input
+        /// </summary>
         private C2DPoint[] ConvexPoints;
-        private IDictionary<C2DPoint, List<C2DTriangle>> PointTriangles = new Dictionary<C2DPoint, List<C2DTriangle>>(new C2DPointComparator());
 
+        /// <summary>
+        /// Dictionary containing the Triangles a point is currently bound to
+        /// </summary>
+        private IDictionary<int, List<ChewTriangle>> PointTriangles = new Dictionary<int, List<ChewTriangle>>();
 
 
         //Ads a triangle to a point;
-        private void AddTriangle(C2DPoint point, C2DTriangle triangle)
+        private void AddTriangle(int pointIndex, ChewTriangle triangle)
         {
-            if (!PointTriangles.Keys.Contains(point))
+            if (!PointTriangles.Keys.Contains(pointIndex))
             {
-                PointTriangles[point] = new List<C2DTriangle>();
+                PointTriangles[pointIndex] = new List<ChewTriangle>();
             }
-            PointTriangles[point].Add(triangle);
+            PointTriangles[pointIndex].Add(triangle);
         }
         /// <summary>
         /// Removes a triangle from a point
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="pointIndex"></param>
         /// <param name="triangle"></param>
-        private void RemoveTriangle(C2DPoint point, C2DTriangle triangle)
+        private void RemoveTriangle(int pointIndex, ChewTriangle triangle)
         {
-            PointTriangles[point].Remove(triangle);
+            PointTriangles[pointIndex].Remove(triangle);
         }
 
-        private List<C2DTriangle> GetTriangles(C2DPoint point)
+        private List<ChewTriangle> GetTriangles(int pointIndex)
         {
-            return PointTriangles[point];
+            return PointTriangles[pointIndex];
         }
 
         /// <summary>
         /// TODO: Optimize this with the hashtable possible by C2DTriangleComparator
         /// </summary>
         /// <returns></returns>
-        private bool ListContains(C2DTriangle triangle, List<C2DTriangle> list)
+        private bool ListContains(ChewTriangle triangle, List<ChewTriangle> list)
         {
-            var comp = new C2DTriangleComparator();
+            var comp = new ChewTriangleComparator();
             return list.Any(o =>comp.Equals(triangle, o));
         }
 
@@ -61,7 +67,7 @@ namespace Algorithms
             RandomGenerator = new Random();
         }
 
-        public static List<C2DTriangle> TestRun(int size)
+        public static List<ChewTriangle> TestRun(int size)
         {
             var convex = AlgorithmsUtil.RandomConvexPolygon(size, size);
             var chews = new Chews() { InputPolygon = convex };
@@ -72,53 +78,70 @@ namespace Algorithms
         /// <summary>
         /// Runs chews algorithm
         /// </summary>
-        public List<C2DTriangle> run()
+        public List<ChewTriangle> run()
         {
             if (!InputPolygon.IsConvex())
                 throw new InvalidOperationException("Chews algorithm was called on a non-convex polygon");
 
             var points = new List<C2DPoint>();
             InputPolygon.GetPointsCopy(points);
-            return ChewRecur(points);
+            ConvexPoints = points.ToArray();
+            var nrOfPoints = ConvexPoints.Count();
 
+            var input = new int[nrOfPoints];
+            for (var i = 0; i < nrOfPoints; i++)
+            {
+                input[i] = i;
+            }
+            return ChewRecur(input.ToList());
         }
 
         /// <summary>
         /// The recursive method for chew's algorithm
         /// List is chosen above IList because we need foreach, and we only use default Lists anyway
         /// </summary>
-        /// <param name="points">The points in the diagram.</param>
+        /// <param name="points">List of indices of the points remaining</param>
         /// <returns></returns>
-        public List<C2DTriangle> ChewRecur(List<C2DPoint> points)
+        public List<ChewTriangle> ChewRecur(List<int> remainingPoints)
         {
-            if (points.Count <= 3)
+            if (remainingPoints.Count <= 3)
             {
-                if (points.Count < 3)
+                if (remainingPoints.Count < 3)
                     throw new InvalidOperationException("Less than two points in the given triangle");
-                var triangle = new C2DTriangle(points[0], points[1], points[2]);
-                AddTriangle(points[0], triangle);
-                AddTriangle(points[1], triangle);
-                AddTriangle(points[2], triangle);
+                var triangle = new ChewTriangle() {
+                    P1 =remainingPoints[0], 
+                    P2 = remainingPoints[1], 
+                    P3 = remainingPoints[2], 
+                    Triangle = new C2DTriangle(ConvexPoints[remainingPoints[0]], ConvexPoints[remainingPoints[1]], ConvexPoints[remainingPoints[2]])
+                };
+                AddTriangle(remainingPoints[0], triangle);
+                AddTriangle(remainingPoints[1], triangle);
+                AddTriangle(remainingPoints[2], triangle);
 
-                var singleTriangle = new List<C2DTriangle>();
+                var singleTriangle = new List<ChewTriangle>();
                 singleTriangle.Add(triangle);
                 return singleTriangle;
             }
 
             //Pick a random point (Step 1)
-            int randIndex = RandomGenerator.Next(0, points.Count);
+            int randIndex = RandomGenerator.Next(0, remainingPoints.Count - 1);
             Debug.WriteLine("Random nr: " + randIndex);
 
-            points.RemoveAt(randIndex);
+            remainingPoints.RemoveAt(randIndex);
 
-            var nodeP = points[randIndex];
-            var nodeQ = points[(randIndex + points.Count - 1) % points.Count];
-            var nodeR = points[(randIndex + 1) % points.Count];
+            var nodeP = remainingPoints[randIndex];
+            var nodeQ = remainingPoints[(randIndex + remainingPoints.Count - 1) % remainingPoints.Count];
+            var nodeR = remainingPoints[(randIndex + 1) % remainingPoints.Count];
 
-            List<C2DTriangle> triangles = ChewRecur(points);
+            List<ChewTriangle> triangles = ChewRecur(remainingPoints);
             
 
-            var pqrTriangle = new C2DTriangle(nodeP, nodeQ, nodeR);
+            var pqrTriangle = new ChewTriangle() {
+                P1 = nodeP,
+                P2 = nodeQ,
+                P3 = nodeR,
+                Triangle = new C2DTriangle(ConvexPoints[nodeP], ConvexPoints[nodeQ], ConvexPoints[nodeR])
+            };
             triangles.Add(pqrTriangle);
 
             //Store reference to the triangle on the points, for later use
@@ -131,36 +154,37 @@ namespace Algorithms
             //TODO: Optimize this so it is in O(n)
             //TODO: Don't check the pqr triangle because we already know its within the range of P.
             var filtered = triangles.Where(o => {
-                    var center = o.GetCircumCentre();
-                    return center.Distance(nodeP) <= center.Distance(o.p1);
+                    var center = o.Triangle.GetCircumCentre();
+                    return center.Distance(ConvexPoints[nodeP]) <= center.Distance(ConvexPoints[o.P1]);
                 }
             ).ToList();
 
             if (filtered.Count() == 0)
                 return triangles;
 
+            var filteredPoints = new List<int>();
+            foreach(var triangle in filtered) {
+                filteredPoints.Add(triangle.P1);
+                filteredPoints.Add(triangle.P2);
+                filteredPoints.Add(triangle.P3);
+            }
+            //Remove doubles
+            filteredPoints = filteredPoints.Distinct().ToList();
+            //Dont use P in retriangulation
+            filteredPoints.Remove(nodeP);
 
             //Obtain all points
-            var filteredPoints = points.Where(o =>
-            {
-                var selTriangles = GetTriangles(o);
-                foreach (var t in selTriangles)
-                {
-                    if (ListContains(t, filtered))
-                        return true;
-                }
-                return false;
-            }).ToList();
+            
 
             //Remove the filtered list from the list
             filtered.ForEach(o =>
             {
-                RemoveTriangle(o.p1, o);
-                RemoveTriangle(o.p2, o);
-                RemoveTriangle(o.p3, o);
+                RemoveTriangle(o.P1, o);
+                RemoveTriangle(o.P2, o);
+                RemoveTriangle(o.P3, o);
                 triangles.Remove(o);
             });
-
+            
 
             //Add the retriangulated version back to the list
             triangles.AddRange(ReTriangulate(filtered, filteredPoints, nodeP));
@@ -176,10 +200,10 @@ namespace Algorithms
         /// <param name="selectedPoints"></param>
         /// <param name="P"></param>
         /// <returns></returns>
-        private IEnumerable<C2DTriangle> ReTriangulate(List<C2DTriangle> S, List<C2DPoint> selectedPoints, C2DPoint P)
+        private IEnumerable<ChewTriangle> ReTriangulate(List<ChewTriangle> S, List<int> selectedPoints, int P)
         {
             Debug.WriteLine("Size of retriangulate set: " + S.Count()); //Debugging if its actually O(1)
-            var result = new List<C2DTriangle>();
+            var result = new List<ChewTriangle>();
 
             //Remove all references to the current triangles
             foreach (var p in selectedPoints)
@@ -187,7 +211,7 @@ namespace Algorithms
                 GetTriangles(p).RemoveAll(o => ListContains(o, S));
             }
 
-            var pointStack = new Stack<C2DPoint>(selectedPoints);
+            var pointStack = new Stack<int>(selectedPoints);
 
             var node1 = pointStack.Pop();
             var firstNode = node1;
@@ -198,7 +222,13 @@ namespace Algorithms
                 node2 = node1;
                 node1 = pointStack.Pop();
                
-                var triangle = new C2DTriangle(node1, node2, P);
+                var triangle = new ChewTriangle() {
+                    P1 = node1,
+                    P2 = node2,
+                    P3 = P,
+                    Triangle = new C2DTriangle(ConvexPoints[node1], ConvexPoints[node2], ConvexPoints[P])
+                };
+                 
                 AddTriangle(node1, triangle);
                 AddTriangle(node2, triangle);
                 AddTriangle(P, triangle);
@@ -206,7 +236,12 @@ namespace Algorithms
             }
             
             //Add last triangle
-            var lastTriangle = new C2DTriangle(node1, firstNode, P);
+            var lastTriangle = new ChewTriangle() {
+                    P1 = node1,
+                    P2 = firstNode,
+                    P3 = P,
+                    Triangle = new C2DTriangle(ConvexPoints[node1], ConvexPoints[firstNode], ConvexPoints[P])
+            };
             AddTriangle(node2, lastTriangle);
             AddTriangle(firstNode, lastTriangle);
             AddTriangle(P, lastTriangle);

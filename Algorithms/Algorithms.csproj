@@ -55,6 +55,8 @@
     <Compile Include="C2DPointComparator.cs" />
     <Compile Include="Chews.cs" />
     <Compile Include="C2DTriangleComparator.cs" />
+    <Compile Include="ChewTriangle.cs" />
+    <Compile Include="ChewTriangleComparator.cs" />
     <Compile Include="IncreasingCWAngle.cs" />
     <Compile Include="MySortedList.cs" />
     <Compile Include="GaSPoint.cs" />
