@@ -52,11 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmsTest.cs" />
     <Compile Include="C2DPointComparator.cs" />
     <Compile Include="Chews.cs" />
     <Compile Include="C2DTriangleComparator.cs" />
     <Compile Include="ChewTriangle.cs" />
     <Compile Include="ChewTriangleComparator.cs" />
+    <Compile Include="Edge.cs" />
+    <Compile Include="GraphManager.cs" />
     <Compile Include="IncreasingCWAngle.cs" />
     <Compile Include="MySortedList.cs" />
     <Compile Include="GaSPoint.cs" />
@@ -64,6 +67,8 @@
     <Compile Include="GuibasAndStolfi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AlgorithmsUtil.cs" />
+    <Compile Include="Triangle.cs" />
+    <Compile Include="Vertex.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

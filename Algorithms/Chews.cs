@@ -20,35 +20,36 @@ namespace Algorithms
         /// <summary>
         /// Dictionary containing the Triangles a point is currently bound to
         /// </summary>
-        private IDictionary<int, List<ChewTriangle>> PointTriangles = new Dictionary<int, List<ChewTriangle>>();
+        //private IDictionary<int, List<ChewTriangle>> PointTriangles = new Dictionary<int, List<ChewTriangle>>();
 
 
-        //Ads a triangle to a point;
-        private void AddTriangle(int pointIndex, ChewTriangle triangle)
-        {
-            if (!PointTriangles.Keys.Contains(pointIndex))
-            {
-                PointTriangles[pointIndex] = new List<ChewTriangle>();
-            }
-            PointTriangles[pointIndex].Add(triangle);
-        }
-        /// <summary>
-        /// Removes a triangle from a point
-        /// </summary>
-        /// <param name="pointIndex"></param>
-        /// <param name="triangle"></param>
-        private void RemoveTriangle(int pointIndex, ChewTriangle triangle)
-        {
-            PointTriangles[pointIndex].Remove(triangle);
-        }
+        ////Ads a triangle to a point;
+        //private void AddTriangle(int pointIndex, ChewTriangle triangle)
+        //{
+        //    if (!PointTriangles.Keys.Contains(pointIndex))
+        //    {
+        //        PointTriangles[pointIndex] = new List<ChewTriangle>();
+        //    }
+        //    PointTriangles[pointIndex].Add(triangle);
+        //}
+        ///// <summary>
+        ///// Removes a triangle from a point
+        ///// </summary>
+        ///// <param name="pointIndex"></param>
+        ///// <param name="triangle"></param>
+        //private void RemoveTriangle(int pointIndex, ChewTriangle triangle)
+        //{
+        //    PointTriangles[pointIndex].Remove(triangle);
+        //}
 
-        private List<ChewTriangle> GetTriangles(int pointIndex)
-        {
-            return PointTriangles[pointIndex];
-        }
+        //private List<ChewTriangle> GetTriangles(int pointIndex)
+        //{
+        //    return PointTriangles[pointIndex];
+        //}
 
         /// <summary>
         /// TODO: Optimize this with the hashtable possible by C2DTriangleComparator
+        /// TODO: Not used
         /// </summary>
         /// <returns></returns>
         private bool ListContains(ChewTriangle triangle, List<ChewTriangle> list)
@@ -69,7 +70,8 @@ namespace Algorithms
 
         public static List<ChewTriangle> TestRun(int size)
         {
-            var convex = AlgorithmsUtil.RandomConvexPolygon(size, size);
+            var convex = AlgorithmsUtil.RndCvxPolygonNewConverted(size, 200);
+            //var convex = AlgorithmsUtil.RandomConvexPolygon(size, size);
             var chews = new Chews() { InputPolygon = convex };
             var result = chews.run();
             return result;
@@ -109,15 +111,17 @@ namespace Algorithms
                 if (remainingPoints.Count < 3)
                     throw new InvalidOperationException("Less than two points in the given triangle");
                 var triangle = new ChewTriangle() {
+                    /**
                     P1 =remainingPoints[0], 
                     P2 = remainingPoints[1], 
-                    P3 = remainingPoints[2], 
+                    P3 = remainingPoints[2], **/
                     Triangle = new C2DTriangle(ConvexPoints[remainingPoints[0]], ConvexPoints[remainingPoints[1]], ConvexPoints[remainingPoints[2]])
                 };
+                /**
                 AddTriangle(remainingPoints[0], triangle);
                 AddTriangle(remainingPoints[1], triangle);
                 AddTriangle(remainingPoints[2], triangle);
-
+                **/
                 var singleTriangle = new List<ChewTriangle>();
                 singleTriangle.Add(triangle);
                 return singleTriangle;
@@ -145,9 +149,9 @@ namespace Algorithms
             triangles.Add(pqrTriangle);
 
             //Store reference to the triangle on the points, for later use
-            AddTriangle(nodeP, pqrTriangle);
-            AddTriangle(nodeQ, pqrTriangle);
-            AddTriangle(nodeR, pqrTriangle);
+            //AddTriangle(nodeP, pqrTriangle);
+            //AddTriangle(nodeQ, pqrTriangle);
+            //AddTriangle(nodeR, pqrTriangle);
             
 
             //All triangles whose circumcircle contains P.
@@ -158,6 +162,8 @@ namespace Algorithms
                     return center.Distance(ConvexPoints[nodeP]) <= center.Distance(ConvexPoints[o.P1]);
                 }
             ).ToList();
+
+          //  filtered.Add(pqrTriangle);
 
             if (filtered.Count() == 0)
                 return triangles;
@@ -179,15 +185,15 @@ namespace Algorithms
             //Remove the filtered list from the list
             filtered.ForEach(o =>
             {
-                RemoveTriangle(o.P1, o);
-                RemoveTriangle(o.P2, o);
-                RemoveTriangle(o.P3, o);
+                //RemoveTriangle(o.P1, o);
+                //RemoveTriangle(o.P2, o);
+                //RemoveTriangle(o.P3, o);
                 triangles.Remove(o);
             });
             
 
             //Add the retriangulated version back to the list
-            triangles.AddRange(ReTriangulate(filtered, filteredPoints, nodeP));
+            triangles.AddRange(ReTriangulate(filteredPoints, nodeP));
 
             return triangles;
         }
@@ -200,9 +206,9 @@ namespace Algorithms
         /// <param name="selectedPoints"></param>
         /// <param name="P"></param>
         /// <returns></returns>
-        private IEnumerable<ChewTriangle> ReTriangulate(List<ChewTriangle> S, List<int> selectedPoints, int P)
+        private IEnumerable<ChewTriangle> ReTriangulate(List<int> selectedPoints, int P)
         {
-            Debug.WriteLine("Size of retriangulate set: " + S.Count()); //Debugging if its actually O(1)
+            Debug.WriteLine("Size of retriangulate set: " + selectedPoints.Count); //Debugging if its actually O(1)
             var result = new List<ChewTriangle>();
 
             for (var index = 0; index < selectedPoints.Count; index++)
@@ -213,14 +219,14 @@ namespace Algorithms
                     var triangle = new ChewTriangle()
                     {
                         P1 = P1,
-                        P2 = P2,
-                        P3 = P,
-                        Triangle = new C2DTriangle(ConvexPoints[P1], ConvexPoints[P2], ConvexPoints[P])
+                        P2 = P,
+                        P3 = P2,
+                        Triangle = new C2DTriangle(ConvexPoints[P1], ConvexPoints[P], ConvexPoints[P2])
                     };
 
-                    AddTriangle(P1, triangle);
-                    AddTriangle(P2, triangle);
-                    AddTriangle(P, triangle);
+                    //AddTriangle(P1, triangle);
+                    //AddTriangle(P2, triangle);
+                    //AddTriangle(P, triangle);
                     result.Add(triangle);
                 }
             }
