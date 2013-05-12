@@ -18,6 +18,10 @@ namespace Algorithms
             edgeList = new List<C2DLine>();
         }
 
+        /// <summary>
+        /// Add a list of points, and the edges connecting them 
+        /// </summary>
+        /// <param name="points"></param>
         public GaSPointEdgeSet(List<C2DPoint> points)
         {
             pointList = new List<GaSPoint>();
@@ -36,6 +40,11 @@ namespace Algorithms
             }
         }
 
+        /// <summary>
+        /// Merge to GaSPointEdgeSets
+        /// </summary>
+        /// <param name="g1"></param>
+        /// <param name="g2"></param>
         public GaSPointEdgeSet(GaSPointEdgeSet g1, GaSPointEdgeSet g2)
         {
             pointList = g1.pointList;
@@ -44,6 +53,10 @@ namespace Algorithms
             edgeList = edgeList.Concat(g2.edgeList).ToList();
         }
 
+        /// <summary>
+        /// Add a single edge to the edge list. Then make sure that both points are in the pointList and know about the edge.
+        /// </summary>
+        /// <param name="edge"></param>
         public void AddEdge(C2DLine edge)
         {
             edgeList.Add(edge);
@@ -71,6 +84,11 @@ namespace Algorithms
             }
         }
 
+        /// <summary>
+        /// Get a single point from the pointList
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public GaSPoint Get(C2DPoint p)
         {
             int i = pointList.IndexOf(new GaSPoint(p));
@@ -79,6 +97,10 @@ namespace Algorithms
             return pointList[i];
         }
 
+        /// <summary>
+        /// Get the pointList sorted by increasing y value
+        /// </summary>
+        /// <returns></returns>
         public List<GaSPoint> GetBottomList()
         {
             List<GaSPoint> low = new List<GaSPoint>(pointList);
@@ -86,11 +108,19 @@ namespace Algorithms
             return low;
         }
 
+        /// <summary>
+        /// Retrieve a copy of the pointList
+        /// </summary>
+        /// <returns></returns>
         public List<GaSPoint> GetList()
         {
             return new List<GaSPoint>(pointList);
         }
 
+        /// <summary>
+        /// Get the point with the lowest y value
+        /// </summary>
+        /// <returns></returns>
         public GaSPoint GetLowestPoint()
         {
             GaSPoint x = pointList[0];
@@ -125,6 +155,12 @@ namespace Algorithms
             #endregion
         }
 
+        /// <summary>
+        /// Remove an edge, and its references in the pointList
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         internal bool Remove(C2DPoint from, C2DPoint to)
         {
             bool success = false;
@@ -164,6 +200,10 @@ namespace Algorithms
             return success;
         }
 
+        /// <summary>
+        /// To string: [point from, point to]
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
