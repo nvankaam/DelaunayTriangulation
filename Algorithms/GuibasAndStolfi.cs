@@ -37,6 +37,11 @@ namespace Algorithms
             return GaSRecur(sortedList);
         }
 
+        /// <summary>
+        /// This is the implementation of the Guibas algorithm
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
         private GaSPointEdgeSet GaSRecur(List<C2DPoint> points)
         {
             // If the number of points in the list is smaller or equal to three, return the edges between them. Edges are added such that the first point is the leftmost
@@ -55,6 +60,7 @@ namespace Algorithms
             GaSPoint leftBottom = leftEdgeSet.GetLowestPoint();
             GaSPoint rightBottom = rightEdgeSet.GetLowestPoint();
 
+            // Make sure that no other left point is on the right of the edge
             for (int i = 0; i < leftBottomList.Count; i++)
             {
                 C2DLine test = new C2DLine(leftBottom, rightBottom);
@@ -64,6 +70,7 @@ namespace Algorithms
                 }
             }
 
+            // Make sure that no other right point is on the right of the edge
             for (int i = 0; i < rightBottomList.Count; i++)
             {
                 C2DLine test = new C2DLine(leftBottom, rightBottom);
@@ -108,18 +115,18 @@ namespace Algorithms
             // Merge the two sets
             GaSPointEdgeSet mergedEdges = new GaSPointEdgeSet(leftEdgeSet, rightEdgeSet);
 
-            
+            // Add edges till there are no more to add.
             while (true)
             {
-                C2DLine baseEdge = new C2DLine(leftBottom, rightBottom);
+                C2DLine baseEdge = new C2DLine(leftBottom, rightBottom); // Create base edge each iteration
 
-                List<C2DPoint> leftSortedAngleList = leftBottom.GetSortedAngleList(leftBottom, rightBottom, true);
-                List<C2DPoint> rightSortedAngleList = rightBottom.GetSortedAngleList(leftBottom, rightBottom, false);
+                List<C2DPoint> leftSortedAngleList = leftBottom.GetSortedAngleList(leftBottom, rightBottom, true); // Determine the connected points ordered by angle for the bottom left point
+                List<C2DPoint> rightSortedAngleList = rightBottom.GetSortedAngleList(leftBottom, rightBottom, false); // Determine the connected points ordered by angle for the bottom right point
 
-                C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges);
-                C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges);
+                C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges); // Find the potential candidate for the left
+                C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges); // Find the potential candidate for the right
 
-                // Add after the potential points are found, because otherwise these are added as well
+                // Add after the potential points are found, because otherwise these are added to the sortedAngleLists as well
                 leftBottom.AddPoint(rightBottom);
                 rightBottom.AddPoint(leftBottom);
                 mergedEdges.AddEdge(baseEdge); 
@@ -145,12 +152,21 @@ namespace Algorithms
                 }
                 else
                 {
-                    break;
+                    break; // No more edges to create
                 }
             }
             return mergedEdges;
         }
 
+        /// <summary>
+        /// This method finds the first potential point from the list of connected nodes by checking the angle and the circumcircle
+        /// </summary>
+        /// <param name="sortedList"></param>
+        /// <param name="start"></param>
+        /// <param name="other"></param>
+        /// <param name="left"></param>
+        /// <param name="edgeSet"></param>
+        /// <returns></returns>
         private C2DPoint PotentialPoint(List<C2DPoint> sortedList, C2DPoint start, C2DPoint other, bool left, ref GaSPointEdgeSet edgeSet)
         {
             for (int i = 0; i < sortedList.Count; i++)
