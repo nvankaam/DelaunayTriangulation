@@ -58,7 +58,7 @@ namespace Algorithms
         /// <returns></returns>
         public static List<Vertex> RandomConvexPolygonImproved(int generationSize, int maxOffset)
         {
-            int offsetSmaller = 8;
+            int offsetSmaller = 4;
             RandomGenerator = new Random();
             var gm = new GraphManager();
             var edges = new List<Edge>();

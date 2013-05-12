@@ -70,7 +70,7 @@ namespace Algorithms
 
         public static List<ChewTriangle> TestRun(int size)
         {
-            var convex = AlgorithmsUtil.RndCvxPolygonNewConverted(size, 200);
+            var convex = AlgorithmsUtil.RndCvxPolygonNewConverted(size, 500);
             //var convex = AlgorithmsUtil.RandomConvexPolygon(size, size);
             var chews = new Chews() { InputPolygon = convex };
             var result = chews.run();

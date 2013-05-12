@@ -31,21 +31,21 @@ namespace WindowsFormsApplication1
 
         private void testChews(int n)
         {
-            //var triangles = Chews.TestRun(n);
-           // ChewsTriangles = triangles;
+            var triangles = Chews.TestRun(n);
+            ChewsTriangles = triangles;
         }
 
         private void pictureBox2_Paint(object sender, PaintEventArgs e)
         {
             var blackPen = new Pen(Color.Black, 2);
             var geoDraw = new CGeoDraw();
-            var poly = AlgorithmsUtil.RndCvxPolygonNewConverted(100, 500);
-            geoDraw.Draw(poly, e.Graphics, blackPen);
-            
-            //foreach (var t in ChewsTriangles)
-            //{
-            //    geoDraw.Draw(t.Triangle, e.Graphics, blackPen);
-            //}
+            //var poly = AlgorithmsUtil.RndCvxPolygonNewConverted(100, 500);
+            //geoDraw.Draw(poly, e.Graphics, blackPen);
+
+            foreach (var t in ChewsTriangles)
+            {
+                geoDraw.Draw(t.Triangle, e.Graphics, blackPen);
+            }
         }
 
         private void testGuibasAndStolfi(int n)
