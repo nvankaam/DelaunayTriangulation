@@ -68,11 +68,8 @@ namespace Algorithms
             RandomGenerator = new Random();
         }
 
-        public static List<ChewTriangle> TestRun(int size)
-        {
-            var convex = AlgorithmsUtil.RndCvxPolygonNewConverted(size, 500);
-            //var convex = AlgorithmsUtil.RandomConvexPolygon(size, size);
-            var chews = new Chews() { InputPolygon = convex };
+        public static List<ChewTriangle> RunOnPolygon(C2DPolygon inputPolygon) {
+            var chews = new Chews() { InputPolygon = inputPolygon };
             var result = chews.run();
             return result;
         }
@@ -82,8 +79,8 @@ namespace Algorithms
         /// </summary>
         public List<ChewTriangle> run()
         {
-            if (!InputPolygon.IsConvex())
-                throw new InvalidOperationException("Chews algorithm was called on a non-convex polygon");
+            //if (!InputPolygon.IsConvex())
+            //    throw new InvalidOperationException("Chews algorithm was called on a non-convex polygon");
 
             var points = new List<C2DPoint>();
             InputPolygon.GetPointsCopy(points);
@@ -129,7 +126,7 @@ namespace Algorithms
 
             //Pick a random point (Step 1)
             int randIndex = RandomGenerator.Next(0, remainingPoints.Count - 1);
-            Debug.WriteLine("Random nr: " + randIndex);
+            //Debug.WriteLine("Random nr: " + randIndex);
 
             remainingPoints.RemoveAt(randIndex);
 
@@ -208,7 +205,7 @@ namespace Algorithms
         /// <returns></returns>
         private IEnumerable<ChewTriangle> ReTriangulate(List<int> selectedPoints, int P)
         {
-            Debug.WriteLine("Size of retriangulate set: " + selectedPoints.Count); //Debugging if its actually O(1)
+            //Debug.WriteLine("Size of retriangulate set: " + selectedPoints.Count); //Debugging if its actually O(1)
             var result = new List<ChewTriangle>();
 
             for (var index = 0; index < selectedPoints.Count; index++)

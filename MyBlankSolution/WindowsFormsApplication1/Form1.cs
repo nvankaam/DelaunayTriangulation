@@ -31,7 +31,12 @@ namespace WindowsFormsApplication1
 
         private void testChews(int n)
         {
-            var triangles = Chews.TestRun(n);
+            var eval = new Evaluater();
+            eval.EvaluateLoop(1);
+            var vertices = AlgorithmsUtil.RandomConvexPolygonImproved(10, 500);
+            var polygon = AlgorithmsUtil.ConvertToPolygon(vertices);
+
+            var triangles = Chews.RunOnPolygon(polygon);
             ChewsTriangles = triangles;
         }
 

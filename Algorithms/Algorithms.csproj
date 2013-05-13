@@ -59,6 +59,7 @@
     <Compile Include="ChewTriangle.cs" />
     <Compile Include="ChewTriangleComparator.cs" />
     <Compile Include="Edge.cs" />
+    <Compile Include="Evaluater.cs" />
     <Compile Include="GraphManager.cs" />
     <Compile Include="IncreasingCWAngle.cs" />
     <Compile Include="MySortedList.cs" />

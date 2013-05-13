@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace Algorithms
 {
     public class AlgorithmsUtil
@@ -41,13 +42,11 @@ namespace Algorithms
         /// Returns a C2DPolygon based on the RandomConvexPolygonImproved method
         /// </summary>
         /// <returns></returns>
-        public static C2DPolygon RndCvxPolygonNewConverted(int generationSize, int maxOffset)
+        public static C2DPolygon ConvertToPolygon(List<Vertex> vertices)
         {
-            var vertices = RandomConvexPolygonImproved(generationSize, maxOffset);
             var points = vertices.Select(o => o.Point).ToList();
-            var result = new C2DPolygon(points, true);
+            var result = new C2DPolygon(points, false);
             return result;
-           
         }
 
         /// <summary>
@@ -72,7 +71,14 @@ namespace Algorithms
             
             int i = 2;
             while(i < generationSize) {
-                var index = RandomGenerator.Next(0, edges.Count - 1);
+                double vertexLength = 0;
+                int index = 0;
+                while (vertexLength < 10)
+                {
+                    index = RandomGenerator.Next(0, edges.Count - 1);
+                    vertexLength = edges[index].CreateLine().GetLength();
+                }
+          
                 var oldEdge = edges[index];
                 var count = edges.Count;
                 edges.RemoveAt(index);
@@ -89,7 +95,7 @@ namespace Algorithms
             var edgeLine = e.CreateLine();
             List<Edge> result = new List<Edge>();
             //Create random point on the edge
-            var offset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 100;
+            var offset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 112 + 0.1;
             var point = edgeLine.GetPointOn(offset);
 
             //Calculate offsets
@@ -129,12 +135,12 @@ namespace Algorithms
             }
 
             //Create random point on the edge
-            var newlineOffset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 100;
+            var newlineOffset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 112+0.1;
             var newPoint = newLine.GetPointOn(offset);
 
             var newVertex = new Vertex() { Point = newPoint };
-
-            gm.AddVertexAt(newVertex, index);
+            //Indexof might be very slow?
+            gm.AddVertexAt(newVertex, gm.Vertices.IndexOf(otherVertex2));
             gm.DestroyEdge(e);//Unregister the old edge
             result.Add(gm.CreateEdge(otherVertex1, newVertex)); //Add the two new ones
             result.Add(gm.CreateEdge(newVertex, otherVertex2)); // :)
