@@ -85,7 +85,7 @@ namespace Algorithms
                 edges.AddRange(SplitConvexEdge(gm, oldEdge, maxOffset/20, (i+1)%count));
                 i++;
             }
-
+            gm.RemoveAllEdges(); //Clean up the convex polygon
             return gm.Vertices;
         }
 
@@ -95,7 +95,7 @@ namespace Algorithms
             var edgeLine = e.CreateLine();
             List<Edge> result = new List<Edge>();
             //Create random point on the edge
-            var offset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 112 + 0.1;
+            var offset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 122 + 0.1;
             var point = edgeLine.GetPointOn(offset);
 
             //Calculate offsets
@@ -119,14 +119,14 @@ namespace Algorithms
             if (otherVertex1.GetOther(e) != otherVertex2.GetOther(e))
             {
                 var intersections = new List<C2DPoint>();
-                otherEdge1.GrowFromCentre(1000000);
+                otherEdge1.GrowFromCentre(100000000);
                 if (newLine.Crosses(otherEdge1, intersections))
                 {
                     var newEndpoint = intersections.Single();
                     newLine = new C2DLine(point, newEndpoint);
                 }
                 intersections = new List<C2DPoint>();
-                otherEdge2.GrowFromCentre(1000000);
+                otherEdge2.GrowFromCentre(100000000);
                 if (newLine.Crosses(otherEdge2, intersections))
                 {
                     var newEndpoint = intersections.Single();
@@ -135,7 +135,7 @@ namespace Algorithms
             }
 
             //Create random point on the edge
-            var newlineOffset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 112+0.1;
+            var newlineOffset = Convert.ToDouble(RandomGenerator.Next(0, 100)) / 122+0.1;
             var newPoint = newLine.GetPointOn(offset);
 
             var newVertex = new Vertex() { Point = newPoint };

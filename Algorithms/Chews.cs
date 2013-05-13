@@ -17,35 +17,6 @@ namespace Algorithms
         /// </summary>
         private C2DPoint[] ConvexPoints;
 
-        /// <summary>
-        /// Dictionary containing the Triangles a point is currently bound to
-        /// </summary>
-        //private IDictionary<int, List<ChewTriangle>> PointTriangles = new Dictionary<int, List<ChewTriangle>>();
-
-
-        ////Ads a triangle to a point;
-        //private void AddTriangle(int pointIndex, ChewTriangle triangle)
-        //{
-        //    if (!PointTriangles.Keys.Contains(pointIndex))
-        //    {
-        //        PointTriangles[pointIndex] = new List<ChewTriangle>();
-        //    }
-        //    PointTriangles[pointIndex].Add(triangle);
-        //}
-        ///// <summary>
-        ///// Removes a triangle from a point
-        ///// </summary>
-        ///// <param name="pointIndex"></param>
-        ///// <param name="triangle"></param>
-        //private void RemoveTriangle(int pointIndex, ChewTriangle triangle)
-        //{
-        //    PointTriangles[pointIndex].Remove(triangle);
-        //}
-
-        //private List<ChewTriangle> GetTriangles(int pointIndex)
-        //{
-        //    return PointTriangles[pointIndex];
-        //}
 
         /// <summary>
         /// TODO: Optimize this with the hashtable possible by C2DTriangleComparator

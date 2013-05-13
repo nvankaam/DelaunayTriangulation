@@ -19,7 +19,7 @@ namespace WindowsFormsApplication1
         GaSPointEdgeSet result;
         List<C2DPoint> points;
 
-        List<ChewTriangle> ChewsTriangles;
+        List<Vertex> Vertices;
 
         public Form1()
         {
@@ -36,8 +36,8 @@ namespace WindowsFormsApplication1
             var vertices = AlgorithmsUtil.RandomConvexPolygonImproved(10, 500);
             var polygon = AlgorithmsUtil.ConvertToPolygon(vertices);
 
-            var triangles = Chews.RunOnPolygon(polygon);
-            ChewsTriangles = triangles;
+            Vertices = NewChews.RunOnList(vertices);
+            
         }
 
         private void pictureBox2_Paint(object sender, PaintEventArgs e)
@@ -47,9 +47,12 @@ namespace WindowsFormsApplication1
             //var poly = AlgorithmsUtil.RndCvxPolygonNewConverted(100, 500);
             //geoDraw.Draw(poly, e.Graphics, blackPen);
 
-            foreach (var t in ChewsTriangles)
+            foreach (var t in Vertices)
             {
-                geoDraw.Draw(t.Triangle, e.Graphics, blackPen);
+                foreach (var edge in t.Edges)
+                {
+                    geoDraw.Draw(edge.CreateLine(), e.Graphics, blackPen);
+                }
             }
         }
 

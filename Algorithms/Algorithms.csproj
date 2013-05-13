@@ -58,6 +58,7 @@
     <Compile Include="C2DTriangleComparator.cs" />
     <Compile Include="ChewTriangle.cs" />
     <Compile Include="ChewTriangleComparator.cs" />
+    <Compile Include="NewChews.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Evaluater.cs" />
     <Compile Include="GraphManager.cs" />

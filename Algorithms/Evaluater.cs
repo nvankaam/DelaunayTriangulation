@@ -13,9 +13,10 @@ namespace Algorithms
         private long gui { get; set; }
         private long chews { get; set; }
         private C2DPolygon chewsPolygon { get; set; }
+        private List<Vertex> Vertices { get; set; }
         public void EvaluateLoop(int times)
         {
-            var iterations = new List<int>() {1000, 2000,3000,4000};
+            var iterations = new List<int>() {500, 1000, 1500, 2000,2500 ,3000};
             foreach (var size in iterations)
             {
                 Evaluate(size, times);
@@ -28,10 +29,10 @@ namespace Algorithms
             chews = 0;
             for (int i = 0; i < times; i++)
             {
-                var vertices = AlgorithmsUtil.RandomConvexPolygonImproved(size, 100 * size);
-                var points = vertices.Select(o => o.Point).ToList();
-                var polygon = AlgorithmsUtil.ConvertToPolygon(vertices);
-                chewsPolygon = polygon;
+                Vertices = AlgorithmsUtil.RandomConvexPolygonImproved(size, 100 * size);
+                var points = Vertices.Select(o => o.Point).ToList();
+                //var polygon = AlgorithmsUtil.ConvertToPolygon(vertices);
+                //chewsPolygon = polygon;
                 Debug.WriteLine("Got the triangles for size: "+size);
                 
                 var threadStart = new ThreadStart(EvaluateChews);
@@ -50,10 +51,9 @@ namespace Algorithms
 
         public void EvaluateChews()
         {
-            var polygon = chewsPolygon;
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            Chews.RunOnPolygon(polygon);
+            NewChews.RunOnList(Vertices);
             stopWatch.Stop();
             chews += stopWatch.ElapsedMilliseconds;
         }
