@@ -123,8 +123,8 @@ namespace Algorithms
                 List<C2DPoint> leftSortedAngleList = leftBottom.GetSortedAngleList(leftBottom, rightBottom, true); // Determine the connected points ordered by angle for the bottom left point
                 List<C2DPoint> rightSortedAngleList = rightBottom.GetSortedAngleList(leftBottom, rightBottom, false); // Determine the connected points ordered by angle for the bottom right point
 
-                C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges); // Find the potential candidate for the left
-                C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges); // Find the potential candidate for the right
+                C2DPoint leftOption = PotentialPoint(leftSortedAngleList, leftBottom, rightBottom, true, ref mergedEdges, leftEdgeSet.GetHighestX().x); // Find the potential candidate for the left
+                C2DPoint rightOption = PotentialPoint(rightSortedAngleList, rightBottom, leftBottom, false, ref mergedEdges, rightEdgeSet.GetSmallestX().x); // Find the potential candidate for the right
 
                 // Add after the potential points are found, because otherwise these are added to the sortedAngleLists as well
                 leftBottom.AddPoint(rightBottom);
@@ -167,15 +167,23 @@ namespace Algorithms
         /// <param name="left"></param>
         /// <param name="edgeSet"></param>
         /// <returns></returns>
-        private C2DPoint PotentialPoint(List<C2DPoint> sortedList, C2DPoint start, C2DPoint other, bool left, ref GaSPointEdgeSet edgeSet)
+        private C2DPoint PotentialPoint(List<C2DPoint> sortedList, C2DPoint start, C2DPoint other, bool left, ref GaSPointEdgeSet edgeSet, double xValue)
         {
             for (int i = 0; i < sortedList.Count; i++)
             {
                 double angle;
                 if (left)
+                {
+                    if (sortedList[i].x > xValue)
+                        return null;
                     angle = Angle(start, sortedList[i], other);
+                }
                 else
+                {
+                    if (sortedList[i].x < xValue)
+                        return null;
                     angle = Angle(start, other, sortedList[i]);
+                }
                 if (angle > Math.PI || angle == 0.0)
                     return null; // The angle may not be larger than 180 degrees clockwise for the point to be a valid option
                 // Determine if the next point lies within the circumcircle
@@ -227,8 +235,26 @@ namespace Algorithms
         /// <returns></returns>
         private bool WithinCircumCircle(C2DPoint t1, C2DPoint t2, C2DPoint t3, C2DPoint p)
         {
-            C2DPoint c = C2DTriangle.GetCircumCentre(t1, t2, t3);
-            return c.Distance(p) < c.Distance(t1);
+            //C2DPoint c = C2DTriangle.GetCircumCentre(t1, t2, t3);
+            //return c.Distance(p) < c.Distance(t1);
+            double[,] mat = null;
+            if (new C2DTriangle(t1, t2, t3).IsClockwise())
+            {
+                 mat = new double[,] { {t2.x, t2.y, Math.Pow(t2.x,2) + Math.Pow(t2.y, 2), 1},
+                                            {t1.x, t1.y, Math.Pow(t1.x,2) + Math.Pow(t1.y, 2), 1},
+                                            {t3.x, t3.y, Math.Pow(t3.x,2) + Math.Pow(t3.y, 2), 1},
+                                            {p.x, p.y, Math.Pow(p.x,2) + Math.Pow(p.y, 2), 1}};
+            }
+            else
+            {
+                mat = new double[,] { {t1.x, t1.y, Math.Pow(t1.x,2) + Math.Pow(t1.y, 2), 1},
+                                            {t2.x, t2.y, Math.Pow(t2.x,2) + Math.Pow(t2.y, 2), 1},
+                                            {t3.x, t3.y, Math.Pow(t3.x,2) + Math.Pow(t3.y, 2), 1},
+                                            {p.x, p.y, Math.Pow(p.x,2) + Math.Pow(p.y, 2), 1}};
+            }
+            Matrix m = new Matrix(4, 4);
+            m.mat = mat;
+            return m.Det() > 0;
         }
     }
 

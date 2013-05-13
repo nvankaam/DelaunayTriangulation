@@ -135,6 +135,40 @@ namespace Algorithms
         }
 
         /// <summary>
+        /// Get the point with the lowest y value
+        /// </summary>
+        /// <returns></returns>
+        public GaSPoint GetSmallestX()
+        {
+            GaSPoint s = pointList[0];
+            for (int i = 1; i < pointList.Count; i++)
+            {
+                if (pointList[i].x < s.x)
+                {
+                    s = pointList[i];
+                }
+            }
+            return new GaSPoint(s);
+        }
+
+        /// <summary>
+        /// Get the point with the lowest y value
+        /// </summary>
+        /// <returns></returns>
+        public GaSPoint GetHighestX()
+        {
+            GaSPoint s = pointList[0];
+            for (int i = 1; i < pointList.Count; i++)
+            {
+                if (pointList[i].x > s.x)
+                {
+                    s = pointList[i];
+                }
+            }
+            return new GaSPoint(s);
+        }
+
+        /// <summary>
         /// Sort helper.
         /// </summary>
         public class PointBottumUp : IComparer<C2DPoint>
