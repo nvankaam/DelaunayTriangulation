@@ -32,11 +32,11 @@ namespace WindowsFormsApplication1
         private void testChews(int n)
         {
             var eval = new Evaluater();
-            eval.EvaluateLoop(1);
-            var vertices = AlgorithmsUtil.RandomConvexPolygonImproved(10, 500);
+            eval.EvaluateLoop(10);
+            var vertices = AlgorithmsUtil.RandomConvexPolygon(10, 500);
             var polygon = AlgorithmsUtil.ConvertToPolygon(vertices);
 
-            Vertices = NewChews.RunOnList(vertices);
+            Vertices = Chews.RunOnList(vertices);
             
         }
 

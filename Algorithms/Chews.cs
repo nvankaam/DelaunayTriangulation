@@ -13,57 +13,45 @@ namespace Algorithms
     public class Chews
     {
         /// <summary>
-        /// List of all points on the input
-        /// </summary>
-        private C2DPoint[] ConvexPoints;
-
-
-        /// <summary>
-        /// TODO: Optimize this with the hashtable possible by C2DTriangleComparator
-        /// TODO: Not used
-        /// </summary>
-        /// <returns></returns>
-        private bool ListContains(ChewTriangle triangle, List<ChewTriangle> list)
-        {
-            var comp = new ChewTriangleComparator();
-            return list.Any(o =>comp.Equals(triangle, o));
-        }
-
-        /// <summary>
         /// The input polygon for chews algorithm
         /// </summary>
-        public C2DPolygon InputPolygon {get; set;}
         Random RandomGenerator { get; set; }
-
-        public Chews() {
+        GraphManager GM { get; set; }
+        public Chews()
+        {
             RandomGenerator = new Random();
-        }
-
-        public static List<ChewTriangle> RunOnPolygon(C2DPolygon inputPolygon) {
-            var chews = new Chews() { InputPolygon = inputPolygon };
-            var result = chews.run();
-            return result;
+            GM = new GraphManager();
         }
 
         /// <summary>
-        /// Runs chews algorithm
+        /// Static method to bootstrap the process.
         /// </summary>
-        public List<ChewTriangle> run()
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static List<Vertex> RunOnList(List<Vertex> input)
         {
-            //if (!InputPolygon.IsConvex())
-            //    throw new InvalidOperationException("Chews algorithm was called on a non-convex polygon");
+            var chews = new Chews();
+            chews.GM.Vertices = input;
+            return chews.run();
+        }
 
-            var points = new List<C2DPoint>();
-            InputPolygon.GetPointsCopy(points);
-            ConvexPoints = points.ToArray();
-            var nrOfPoints = ConvexPoints.Count();
+
+        /// <summary>
+        /// Runs chews algorithm, and returns all vertices with the references to the edges
+        /// </summary>
+        public List<Vertex> run()
+        {
+            var nrOfPoints = GM.Vertices.Count();
 
             var input = new int[nrOfPoints];
             for (var i = 0; i < nrOfPoints; i++)
             {
                 input[i] = i;
             }
-            return ChewRecur(input.ToList());
+           
+            ChewRecur(input.ToList());
+  
+            return GM.Vertices;
         }
 
         /// <summary>
@@ -72,136 +60,96 @@ namespace Algorithms
         /// </summary>
         /// <param name="points">List of indices of the points remaining</param>
         /// <returns></returns>
-        public List<ChewTriangle> ChewRecur(List<int> remainingPoints)
+        public void ChewRecur(List<int> remainingPoints)
         {
             if (remainingPoints.Count <= 3)
             {
                 if (remainingPoints.Count < 3)
                     throw new InvalidOperationException("Less than two points in the given triangle");
-                var triangle = new ChewTriangle() {
-                    /**
-                    P1 =remainingPoints[0], 
-                    P2 = remainingPoints[1], 
-                    P3 = remainingPoints[2], **/
-                    Triangle = new C2DTriangle(ConvexPoints[remainingPoints[0]], ConvexPoints[remainingPoints[1]], ConvexPoints[remainingPoints[2]])
-                };
-                /**
-                AddTriangle(remainingPoints[0], triangle);
-                AddTriangle(remainingPoints[1], triangle);
-                AddTriangle(remainingPoints[2], triangle);
-                **/
-                var singleTriangle = new List<ChewTriangle>();
-                singleTriangle.Add(triangle);
-                return singleTriangle;
+                
+                var triangle =  GM.CreateTriangleAndEdges(GM.Vertices[0], GM.Vertices[1], GM.Vertices[2]);
+                return;           
             }
 
+            var remainingCount = remainingPoints.Count;
             //Pick a random point (Step 1)
             int randIndex = RandomGenerator.Next(0, remainingPoints.Count - 1);
-            //Debug.WriteLine("Random nr: " + randIndex);
 
             remainingPoints.RemoveAt(randIndex);
-
             var nodeP = remainingPoints[randIndex];
             var nodeQ = remainingPoints[(randIndex + remainingPoints.Count - 1) % remainingPoints.Count];
             var nodeR = remainingPoints[(randIndex + 1) % remainingPoints.Count];
 
-            List<ChewTriangle> triangles = ChewRecur(remainingPoints);
-            
+            //Recursively call self, obtaining the Delaunauy graph for every vertex except P.
+            ChewRecur(remainingPoints);
 
-            var pqrTriangle = new ChewTriangle() {
-                P1 = nodeP,
-                P2 = nodeQ,
-                P3 = nodeR,
-                Triangle = new C2DTriangle(ConvexPoints[nodeP], ConvexPoints[nodeQ], ConvexPoints[nodeR])
-            };
-            triangles.Add(pqrTriangle);
-
-            //Store reference to the triangle on the points, for later use
-            //AddTriangle(nodeP, pqrTriangle);
-            //AddTriangle(nodeQ, pqrTriangle);
-            //AddTriangle(nodeR, pqrTriangle);
-            
+            var pqrTriangle = GM.CreateTriangleAndEdges(GM.Vertices[nodeP], GM.Vertices[nodeQ], GM.Vertices[nodeR]);
 
             //All triangles whose circumcircle contains P.
-            //TODO: Optimize this so it is in O(n)
-            //TODO: Don't check the pqr triangle because we already know its within the range of P.
-            var filtered = triangles.Where(o => {
-                    var center = o.Triangle.GetCircumCentre();
-                    return center.Distance(ConvexPoints[nodeP]) <= center.Distance(ConvexPoints[o.P1]);
+            var filtered = GetRecursiveConflicitingTriangles(GM.Vertices[nodeP], pqrTriangle, remainingCount, null);
+
+            //Dont need to retriangulate if the only conflicting triangle is pqr
+            if(filtered.Count > 1){
+
+                //Retriangulate all conflicting triangles
+                foreach (var triangle in filtered)
+                {
+                    if (triangle != pqrTriangle)
+                        Retriangulate(triangle, GM.Vertices[nodeP]);
                 }
-            ).ToList();
-
-          //  filtered.Add(pqrTriangle);
-
-            if (filtered.Count() == 0)
-                return triangles;
-
-            var filteredPoints = new List<int>();
-            foreach(var triangle in filtered) {
-                filteredPoints.Add(triangle.P1);
-                filteredPoints.Add(triangle.P2);
-                filteredPoints.Add(triangle.P3);
             }
-            //Remove doubles
-            filteredPoints = filteredPoints.Distinct().ToList();
 
-            filteredPoints.Sort();
-
-            //Obtain all points
-            
-
-            //Remove the filtered list from the list
-            filtered.ForEach(o =>
-            {
-                //RemoveTriangle(o.P1, o);
-                //RemoveTriangle(o.P2, o);
-                //RemoveTriangle(o.P3, o);
-                triangles.Remove(o);
-            });
-            
-
-            //Add the retriangulated version back to the list
-            triangles.AddRange(ReTriangulate(filteredPoints, nodeP));
-
-            return triangles;
+            return;
         }
 
         /// <summary>
-        /// Retriangulates the set of points with P as endpoint. 
-        /// Note this only works for convex polygon points and assumes the points are sorted in the same order as they appear in the polygon!
+        /// Retriangulate the given triangle with P
+        /// Basically removes the conflicting edge from the graph and introduces a new one from the vertex that was not on the removed edge and P
         /// </summary>
-        /// <param name="S"></param>
-        /// <param name="selectedPoints"></param>
+        /// <param name="triangle"></param>
         /// <param name="P"></param>
-        /// <returns></returns>
-        private IEnumerable<ChewTriangle> ReTriangulate(List<int> selectedPoints, int P)
+        private void Retriangulate(Triangle triangle, Vertex P)
         {
-            //Debug.WriteLine("Size of retriangulate set: " + selectedPoints.Count); //Debugging if its actually O(1)
-            var result = new List<ChewTriangle>();
+            var otherVertex = triangle.GetVertices().Single(o => o != triangle.conflictingEdge.v1 && o != triangle.conflictingEdge.v2);
+            GM.DestroyEdge(triangle.conflictingEdge);
+            GM.CreateOrGet(otherVertex, P);
+        }
 
-            for (var index = 0; index < selectedPoints.Count; index++)
+        /// <summary>
+        /// Recursively retrieves all conflicting triangles with P based on their circumcircle
+        /// This method should be O(S) where S is the number of conflicting triangles, which is constant for a convex polygon
+        /// However due to a bug this seems to be untrue.
+        /// </summary>
+        /// <param name="P"></param>
+        /// <param name="currentTriangle"></param>
+        /// <param name="SearchNr"></param>
+        /// <param name="conflicting"></param>
+        /// <returns></returns>
+        private List<Triangle> GetRecursiveConflicitingTriangles(Vertex P, Triangle currentTriangle, int SearchNr, Edge conflicting)
+        {
+            var result = new List<Triangle>();
+            if(currentTriangle == null)
+                return result;
+            currentTriangle.conflictingEdge = conflicting;
+            var center = currentTriangle.CreateTriangle().GetCircumCentre();
+            if (center.Distance(P.Point) <= center.Distance(currentTriangle.Edges[0].v1.Point))
             {
-                var P1 = selectedPoints[index];
-                var P2 = selectedPoints[(index+1)%selectedPoints.Count];
-                if(P1 != P && P2 != P) {
-                    var triangle = new ChewTriangle()
+                //If the circumcircle contains P, add the triangle to the list
+                result.Add(currentTriangle);
+                //And continue over all triangles adjecent to the current triangles
+                foreach (var edge in currentTriangle.Edges)
+                {
+                    //If the edge was not visited yet, continue
+                    if (!edge.VisitedBy.ContainsKey(SearchNr) || !edge.VisitedBy[SearchNr])
                     {
-                        P1 = P1,
-                        P2 = P,
-                        P3 = P2,
-                        Triangle = new C2DTriangle(ConvexPoints[P1], ConvexPoints[P], ConvexPoints[P2])
-                    };
-
-                    //AddTriangle(P1, triangle);
-                    //AddTriangle(P2, triangle);
-                    //AddTriangle(P, triangle);
-                    result.Add(triangle);
+                        edge.VisitedBy[SearchNr] = true;
+                        result.AddRange(GetRecursiveConflicitingTriangles(P, edge.GetOtherTriangle(currentTriangle), SearchNr, edge));
+                    }
                 }
+
             }
             return result;
         }
-
-
 
     }
 }

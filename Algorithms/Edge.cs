@@ -28,9 +28,10 @@ namespace Algorithms
         {
             var otherVertexOfTriangle = t.GetVertices().Single(o => o != v1 && o != v2);
             var triangleMembers = GetTriangleMembers();
-            if (triangleMembers.Count() > 2)
-                throw new InvalidOperationException("Edge with more than two triangles?");
-            var otherTriangleMember = triangleMembers.SingleOrDefault(o => o != otherVertexOfTriangle);
+            //if (triangleMembers.Count() > 2)
+                //throw new InvalidOperationException("Edge with more than two triangles?");
+            //TODO: Something goes wrong here! This should never be larger than 1!!!
+            var otherTriangleMember = triangleMembers.FirstOrDefault(o => o != otherVertexOfTriangle);
             if (otherTriangleMember == null)
                 return null;
             var edges = new List<Edge>() { this };

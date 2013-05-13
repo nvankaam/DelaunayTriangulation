@@ -5,11 +5,12 @@ using System.Text;
 
 namespace Algorithms
 {
+    /// <summary>
+    /// Class monitoring the graph and updating all references between graph components (edges, vertices, triangles)
+    /// </summary>
     public class GraphManager
     {
         public List<Vertex> Vertices { get; set; }
-        //public List<Edge> Edges { get; set; }
-        //public List<Triangle> Triangles { get; set; }
 
         public GraphManager()
         {
@@ -54,19 +55,7 @@ namespace Algorithms
             return triangle;
         }
 
-        /// <summary>
-        /// Destroys the given triangle. Also destroys unreferenced edges
-        /// </summary>
-        /// <param name="triangle"></param>
-        //public void DestroyTriangle(Triangle triangle)
-        //{
-        //    triangle.Edges.ForEach(o =>
-        //    {
-        //        o.Triangles.Remove(triangle);
-        //        if (o.Triangles.Count == 0)
-        //            DestroyEdge(o);
-        //    });
-        //}
+   
 
         /// <summary>
         /// Inserts a vertex into the list at a specific location
@@ -119,8 +108,6 @@ namespace Algorithms
         /// <param name="e"></param>
         public void DestroyEdge(Edge e)
         {
-            //if (Triangles.Count != 0)
-            //    throw new InvalidOperationException("Trying to destroy an edge that still has a triangle");
             e.v1.Edges.Remove(e);
             e.v2.Edges.Remove(e);
             
